@@ -32,7 +32,9 @@ databyinterval[which(databyinterval$tsteps== max(databyinterval$tsteps)),]
 
 
 ## Imputing missing values
-
+# generate listing of NA's
+missingVals <- sum(is.na(data))
+missingVals
 
 
 ## Are there differences in activity patterns between weekdays and weekends?
