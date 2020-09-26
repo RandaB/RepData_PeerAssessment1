@@ -8,14 +8,16 @@ output:
 
 ## Loading and preprocessing the data
 
+# unzip data and read 
+unzip("activity.zip")
+stepdata <- read.csv("activity.csv", header = TRUE)
+head(stepdata)
 
 
 ## What is mean total number of steps taken per day?
 
 
-
 ## What is the average daily activity pattern?
-
 
 
 ## Imputing missing values
