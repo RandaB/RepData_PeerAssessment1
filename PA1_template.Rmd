@@ -24,7 +24,9 @@ mean(databydate$tsteps)
 median(databydate$tsteps)
 
 ## What is the average daily activity pattern?
-
+library(ggplot2)
+databyinterval <- stepdata%>% select(interval, steps) %>% na.omit() %>% group_by(interval) %>% summarize(tsteps= mean(steps)) 
+ggplot(databyinterval, aes(x=interval, y=tsteps))+ geom_line()
 
 ## Imputing missing values
 
