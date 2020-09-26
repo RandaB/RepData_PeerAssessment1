@@ -15,6 +15,10 @@ head(stepdata)
 
 
 ## What is mean total number of steps taken per day?
+library(magrittr)
+library(dplyr)
+databydate <- stepdata %>% select(date, steps) %>% group_by(date) %>% summarize(tsteps= sum(steps)) %>%na.omit()
+hist(databydate$tsteps, xlab = "Total daily Steps",main="Histogram of Total Steps by day", breaks = 20)
 
 
 ## What is the average daily activity pattern?
