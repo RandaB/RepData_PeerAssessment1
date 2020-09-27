@@ -1,42 +1,48 @@
 ---
 title: "Reproducible Research: Peer Assessment 1"
-output: 
-  html_document:
-    keep_md: true
+output: html_document
 ---
 
 
 ## Loading and preprocessing the data
 
 # unzip data and read 
+```{r, echo = TRUE}
 unzip("activity.zip")
 stepdata <- read.csv("activity.csv", header = TRUE)
 head(stepdata)
-
+```
 
 ## What is mean total number of steps taken per day?
+```{r, echo = TRUE}
 library(magrittr)
 library(dplyr)
 databydate <- stepdata %>% select(date, steps) %>% group_by(date) %>% summarize(tsteps= sum(steps)) %>%na.omit()
 hist(databydate$tsteps, xlab = "Total daily Steps",main="Histogram of Total Steps by day", breaks = 20)
-
+```
+```{r, echo = TRUE}
 mean(databydate$tsteps)
 median(databydate$tsteps)
-
+```
 ## What is the average daily activity pattern?
+```{r, echo = TRUE}
 library(ggplot2)
 databyinterval <- stepdata%>% select(interval, steps) %>% na.omit() %>% group_by(interval) %>% summarize(tsteps= mean(steps)) 
 ggplot(databyinterval, aes(x=interval, y=tsteps))+ geom_line()
 
 databyinterval[which(databyinterval$tsteps== max(databyinterval$tsteps)),]
-
+```
 
 ## Imputing missing values
-# generate listing of NA's
-missingVals <- sum(is.na(data))
+
+## generate listing of NA's
+```{r, echo = TRUE}
+missingVals <- sum(is.na(stepdata$steps))
 missingVals
+```
 
-
+## generate histogram
+```{r}
 library(magrittr)
 library(dplyr)
 
@@ -54,13 +60,26 @@ summary(FullSummedDataByDay)
 
 hist(FullSummedDataByDay$totalsteps, xlab = "Steps", ylab = "Frequency", main = "Total Daily Steps", breaks = 20)
 
+oldmean <- mean(databydate$tsteps, na.rm = TRUE)
+newmean <- mean(FullSummedDataByDay$totalsteps)
+# Old mean and New mean
+oldmean
+newmean
 
+oldmedian <- median(databydate$tsteps, na.rm = TRUE)
+newmedian <- median(FullSummedDataByDay$totalsteps)
+# Old median and New median
+oldmedian
+newmedian
+```
 ## Are there differences in activity patterns between weekdays and weekends?
-
+```{r, echo = TRUE}
 meandata$date <- as.Date(meandata$date)
 meandata$weekday <- weekdays(meandata$date)
 meandata$weekend <- ifelse(meandata$weekday=="samedi" | meandata$weekday=="dimanche", "Weekend", "Weekday" )
+```
 
+```{r, echo = TRUE}
 library(ggplot2)
 meandataweekendweekday <- aggregate(meandata$steps , by= list(meandata$weekend, meandata$interval), na.omit(mean))
 names(meandataweekendweekday) <- c("weekend", "interval", "steps")
@@ -69,3 +88,4 @@ ggplot(meandataweekendweekday, aes(x=interval, y=steps, color=weekend)) + geom_l
 facet_grid(weekend ~.) + xlab("Interval") + ylab("Mean of Steps") +
 ggtitle("Comparison of Average Number of Steps in Each Interval")
     
+```
